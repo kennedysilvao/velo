@@ -13,8 +13,15 @@ test('deve consultar um pedido aprovado', async ({ page }) => {
     await page.getByTestId('search-order-button').click()
 
     // Assert
-    await expect(page.getByText('VLO-QL43NG')).toBeVisible();
-    await expect(page.locator('//p[text()="VLO-QL43NG"]')).toContainText('VLO-QL43NG')
+
+    // const orderCode = page.locator('//p[text()="Pedido"]/..//p[text()="VLO-QL43NG"]')
+    // await expect(orderCode).toBeVisible({ timeout: 10_000 })
+
+    const containerPedido = page.getByRole('paragraph')
+        .filter({ hasText: /^Pedido$/ })
+        .locator('..')
+
+    await expect(containerPedido).toContainText('VLO-QL43NG', {timeout: 10_000})
     await expect(page.getByText('APROVADO')).toBeVisible();
     await expect(page.locator('//div[text()="APROVADO"]')).toContainText('APROVADO')
 });
