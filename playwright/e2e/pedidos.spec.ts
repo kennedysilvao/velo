@@ -16,39 +16,99 @@ test.describe('Consulta de Pedido', () => {
     test('deve consultar um pedido aprovado', async ({ page }) => {
 
         // Test Data
-        const orderId = 'VLO-QL43NG'
+        const order = {
+            number: 'VLO-QL43NG',
+            color: 'Glacier Blue',
+            wheels: 'aero Wheels',
+            customer: {
+                name: 'Kennedy Silva',
+                email: 'kennedy@velo.dev'
+            },
+            payment: 'À Vista'
+        }
 
         // Act
-        await page.getByTestId('search-order-id').fill(orderId)
+        await page.getByTestId('search-order-id').fill(order.number)
         await page.getByTestId('search-order-button').click()
 
         // Assert
-        await expect(page.getByTestId(`order-result-${orderId}`)).toMatchAriaSnapshot(`
+        await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
             - img
             - paragraph: Pedido
-            - paragraph: ${orderId}
+            - paragraph: ${order.number}
             - img
             - text: APROVADO
             - img "Velô Sprint"
             - paragraph: Modelo
             - paragraph: Velô Sprint
             - paragraph: Cor
-            - paragraph: Glacier Blue
+            - paragraph: ${order.color}
             - paragraph: Interior
             - paragraph: cream
             - paragraph: Rodas
-            - paragraph: aero Wheels
+            - paragraph: ${order.wheels}
             - heading "Dados do Cliente" [level=4]
             - paragraph: Nome
-            - paragraph: Kennedy Silva
+            - paragraph: ${order.customer.name}
             - paragraph: Email
-            - paragraph: kennedy@velo.dev
+            - paragraph: ${order.customer.email}
             - paragraph: Loja de Retirada
             - paragraph
             - paragraph: Data do Pedido
             - paragraph: /\\d+\\/\\d+\\/\\d+/
             - heading "Pagamento" [level=4]
-            - paragraph: À Vista
+            - paragraph: ${order.payment}
+            - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
+            `);
+    })
+
+    test('deve consultar um pedido reprovado', async ({ page }) => {
+
+        // Test Data
+        // const orderId = 'VLO-KKYWLZ'
+
+        const order = {
+            number: 'VLO-KKYWLZ',
+            color: 'Midnight Black',
+            wheels: 'sport Wheels',
+            customer: {
+                name: 'Kevin Oliveira',
+                email: 'kevin@velo.dev'
+            },
+            payment: 'À Vista'
+        }
+
+        // Act
+        await page.getByTestId('search-order-id').fill(order.number)
+        await page.getByTestId('search-order-button').click()
+
+        // Assert
+        await expect(page.getByTestId(`order-result-${order.number}`)).toMatchAriaSnapshot(`
+            - img
+            - paragraph: Pedido
+            - paragraph: ${order.number}
+            - img
+            - text: REPROVADO
+            - img "Velô Sprint"
+            - paragraph: Modelo
+            - paragraph: Velô Sprint
+            - paragraph: Cor
+            - paragraph: ${order.color}
+            - paragraph: Interior
+            - paragraph: cream
+            - paragraph: Rodas
+            - paragraph: ${order.wheels}
+            - heading "Dados do Cliente" [level=4]
+            - paragraph: Nome
+            - paragraph: ${order.customer.name}
+            - paragraph: Email
+            - paragraph: ${order.customer.email}
+            - paragraph: Loja de Retirada
+            - paragraph
+            - paragraph: Data do Pedido
+            - paragraph: /\\d+\\/\\d+\\/\\d+/
+            - heading "Pagamento" [level=4]
+            - paragraph: ${order.payment}
             - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
             `);
     })
